@@ -33,8 +33,10 @@ test "should send chat messages to Ollama server" {
 
     const client = ollama.NewOllama(allocator, "http://127.0.0.1:11434");
 
-    const resp = try client.chat(chat_args);
-    defer resp.deinit();
+    const res = try client.chat(chat_args);
+    defer res.deinit();
 
-    std.debug.print("Body:\n{s}\n", .{resp.value.message.content});
+    const chat_resp = res.value;
+
+    try expect(chat_resp.message.content.len > 0);
 }
