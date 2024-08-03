@@ -39,7 +39,7 @@ test "should send chat messages to Ollama server" {
     try expect(chat_resp.message.content.len > 0);
 }
 
-test "should send chat messages history to Ollama server" {
+test "should send chat message history to Ollama server" {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     defer _ = gpa.deinit();
     const allocator = gpa.allocator();
