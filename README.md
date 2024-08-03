@@ -23,7 +23,7 @@ defer res.deinit();
 const chat_resp = res.value; // Response object
 ```
 
-*Note*, streaming is not yet enabled. I still need investigate how to zig can read the streaming endpoint. If stream is set to true, the request will fail.
+*Note*, streaming is not yet enabled. I still need to investigate how to read a streaming endpoint in zig. If stream is set to true, the request will fail.
 ```zig
 const client = ollama.newOllama(allocator, "http://127.0.0.1:11434");
 const chat_args = ollama.ChatArgs{
