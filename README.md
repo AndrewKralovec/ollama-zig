@@ -14,6 +14,8 @@ const client = ollama.NewOllama("http://127.0.0.1:11434");
 ```
 
 ## Tests
+Until i figure out the proper way to mock HTTP clients/requests in zig, the Ollama server needs to be running.
+
 Run tests by using the zig test command.
 ```sh
 zig test tes_ollama_zig.zig
