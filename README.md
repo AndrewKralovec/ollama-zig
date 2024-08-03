@@ -53,5 +53,5 @@ Until i figure out the proper way to mock HTTP clients/requests in zig, the Olla
 
 Run tests by using the zig test command.
 ```sh
-zig test tes_ollama_zig.zig
+zig test test_ollama_zig.zig
 ```
