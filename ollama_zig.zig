@@ -3,7 +3,7 @@ const http = std.http;
 const json = std.json;
 
 // Create a new ollama client.
-pub fn NewOllama(allocator: std.mem.Allocator, url: []const u8) Ollama {
+pub fn newOllama(allocator: std.mem.Allocator, url: []const u8) Ollama {
     return Ollama{ .allocator = allocator, .base_url = url };
 }
 
@@ -15,7 +15,7 @@ pub const Ollama = struct {
     base_url: []const u8,
     // Generate the next message in a chat with a provided model.
     // The final response object will include statistics and additional data from the request.
-    // NOTE: Streaming is not yet setup. Still investiaging how to zig can read the streaming endpoint.
+    // NOTE: Streaming is not yet setup. If stream is set to true, the request will fail.
     // Once enabled, chat is a streaming endpoint, so there will be a series of responses.
     // Streaming can be disabled using "stream": false.
     pub fn chat(self: Ollama, args: ChatArgs) !json.Parsed(ChatResponse) {
@@ -44,35 +44,28 @@ pub const ChatArgs = struct {
     // REQUIRED: the model name.
     model: []const u8,
     // The messages of the chat, this can be used to keep a chat memory.
-    messages: []const ChatMessageArgs,
+    messages: []const ChatMessage,
     // NOTE: Streaming is not yet implemented.
     // The false the response will be returned as a single response object, rather than a stream of objects.
     stream: bool,
 };
-// Chat message arguments type.
-pub const ChatMessageArgs = struct {
+// Chat message type.
+pub const ChatMessage = struct {
     // The role of the message, either system, user, assistant, or tool.
     role: []const u8,
     // The content of the message.
     content: []const u8,
 };
-// Chat message type.
-pub const ChatMessage = struct {
-    // The role of the message, either system, user, assistant, or tool.
-    role: []u8,
-    // The content of the message.
-    content: []u8,
-};
 // Chat response type.
 pub const ChatResponse = struct {
     // REQUIRED: the model name.
-    model: []u8,
+    model: []const u8,
     // The messages of the chat, this can be used to keep a chat memory.
     message: ChatMessage,
     // Time created.
-    created_at: []u8,
+    created_at: []const u8,
     // Reason for stream end.
-    done_reason: []u8,
+    done_reason: []const u8,
     // Stream is done.
     done: bool,
     // Time spent generating the response.
@@ -133,6 +126,7 @@ fn post(allocator: std.mem.Allocator, uri: std.Uri, input: anytype) ![]u8 {
     try req.wait();
     try std.testing.expectEqual(req.response.status, .ok);
 
+    // TODO: Find out best stragety for dealing with max alloc size.
     var rdr = req.reader();
     const body = try rdr.readAllAlloc(allocator, 1024 * 1024 * 4);
     return body;
