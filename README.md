@@ -10,7 +10,7 @@ The client will interact with Ollama server via http, using the [Ollama API](htt
 Initialize the client by entering the base url to the Ollama server.
 Note, the default url for ollama is "http://127.0.0.1:11434".
 ```zig
-const client = ollama.newOllama("http://127.0.0.1:11434");
+const client = ollama.newOllama(allocator, "http://127.0.0.1:11434");
 ```
 
 ### Chat
